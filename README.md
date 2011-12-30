@@ -60,6 +60,6 @@ rsolr.add { :id => 1, :title => "Hello world" }, { :headers => auth_headers }
 rsolr.commit :headers => auth_headers
 
 # Search
-rsolr.get 'select', :params => { :q => "hello" }, :headers => { auth_headers }
+rsolr.get 'select', :params => { :q => "hello" }, :headers => auth_headers
 
 ```
