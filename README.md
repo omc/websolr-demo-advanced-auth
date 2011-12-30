@@ -15,21 +15,26 @@ token is used with the HMAC-SHA1 algorithm as described below.
 The authorization scheme works by including three additional HTTP headers with
 each request to Solr:
 
-### `X-Websolr-Time`
+### X-Websolr-Time
 
 The current Unix time -- seconds since epoch. This value must be within one
 minute of our server time to prevent replay attacks.  (Regex: `/[0-9]+/`)
 
-### `X-Websolr-Nonce`
+### X-Websolr-Nonce
 
 Any random non-whitespace string. This value further guarantees the uniqueness
 of each generated authorization token. (Regex: `/\S+/`)
 
-### `X-Websolr-Auth`
+### X-Websolr-Auth
 
 The hexadecimal HMAC-SHA1 digest of your shared secret and the concatenation of
-the above **time** and **nonce**. For example, in Ruby:
-`OpenSSL::HMAC.hexdigest('sha1', SECRET, "#{time}#{nonce}")`
+the above **time** and **nonce**.
+
+For example, in Ruby:
+
+```ruby
+OpenSSL::HMAC.hexdigest('sha1', SECRET, "#{time}#{nonce}")
+```
 
 ## Example with RSolr
 
