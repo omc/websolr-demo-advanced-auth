@@ -69,10 +69,10 @@ OpenSSL::HMAC.hexdigest('sha1', SECRET, "#{time}#{nonce}")
 require 'rsolr'
 rsolr = RSolr.connect :url => ENV['WEBSOLR_URL']
 
-def auth_headers
+def auth_headers(secret=ENV['WEBSOLR_AUTH'])
   time  = Time.now.to_i
   nonce = Time.now.to_i.to_s.split(//).sort_by{rand}.join
-  auth  = OpenSSL::HMAC.hexdigest('sha1', ENV['WEBSOLR_AUTH'], "#{time}#{nonce}")
+  auth  = OpenSSL::HMAC.hexdigest('sha1', secret, "#{time}#{nonce}")
   {
     'X-Websolr-Time'  => time,
     'X-Websolr-Nonce' => nonce,
