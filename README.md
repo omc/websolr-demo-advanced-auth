@@ -30,7 +30,7 @@ git clone git://github.com/nz/websolr-demo-advanced-auth.git
 cd websolr-advanced-auth
 
 bundle install
-bundle exec rake db:create db:seed
+bundle exec rake db:seed
 
 bundle exec rails server
 open http://localhost:300/
@@ -43,8 +43,9 @@ each request to Solr:
 
 ### X-Websolr-Time
 
-The current Unix time -- seconds since epoch. This value must be within one
-minute of our server time to prevent replay attacks.  (Regex: `/[0-9]+/`)
+The current Unix time -- seconds since epoch. This value helps to guarantee
+uniquness over time, and must be within one minute of our server time to prevent
+replay attacks.  (Regex: `/[0-9]+/`)
 
 ### X-Websolr-Nonce
 
@@ -71,7 +72,7 @@ rsolr = RSolr.connect :url => ENV['WEBSOLR_URL']
 def auth_headers
   time  = Time.now.to_i
   nonce = Time.now.to_i.to_s.split(//).sort_by{rand}.join
-  auth  = OpenSSL.hexdigest('sha1', ENV['WEBSOLR_AUTH'], "#{time}#{nonce}")
+  auth  = OpenSSL::HMAC.hexdigest('sha1', ENV['WEBSOLR_AUTH'], "#{time}#{nonce}")
   {
     'X-Websolr-Time'  => time,
     'X-Websolr-Nonce' => nonce,
