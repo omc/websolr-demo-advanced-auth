@@ -40,7 +40,7 @@ OpenSSL::HMAC.hexdigest('sha1', SECRET, "#{time}#{nonce}")
 
 ```ruby
 require 'rsolr'
-rsolr = RSolr.connect url: ENV['WEBSOLR_URL']
+rsolr = RSolr.connect :url => ENV['WEBSOLR_URL']
 
 def auth_headers
   time  = Time.now.to_i
@@ -54,12 +54,12 @@ def auth_headers
 end
 
 # Add a document
-rsolr.add { id: 1, title: "Hello world" }, { headers: auth_headers }
+rsolr.add { :id => 1, :title => "Hello world" }, { :headers => auth_headers }
 
 # Commit
-rsolr.commit headers: auth_headers
+rsolr.commit :headers => auth_headers
 
 # Search
-rsolr.get 'select', params: { q: "hello" }, headers: { auth_headers }
+rsolr.get 'select', :params => { :q => "hello" }, :headers => { auth_headers }
 
 ```
