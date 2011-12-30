@@ -15,15 +15,21 @@ token is used with the HMAC-SHA1 algorithm as described below.
 The authorization scheme works by including three additional HTTP headers with
 each request to Solr:
 
-- `X-Websolr-Time`: The current Unix time -- seconds since epoch. This value
-  must be within one minute of our server time to prevent replay attacks.
-  (Regex: `/[0-9]+/`)
-- `X-Websolr-Nonce`: Any random non-whitespace string. This value further
-  guarantees the uniqueness of each generated authorization token. (Regex:
-  `/\S+/`)
-- `X-Websolr-Auth`: The hexadecimal HMAC-SHA1 digest of your shared secret and
-  the concatenation of the above **time** and **nonce**. For example, in Ruby:
-  `OpenSSL::HMAC.hexdigest('sha1', SECRET, "#{time}#{nonce}")`
+### `X-Websolr-Time`
+
+The current Unix time -- seconds since epoch. This value must be within one
+minute of our server time to prevent replay attacks.  (Regex: `/[0-9]+/`)
+
+### `X-Websolr-Nonce`
+
+Any random non-whitespace string. This value further guarantees the uniqueness
+of each generated authorization token. (Regex: `/\S+/`)
+
+### `X-Websolr-Auth`
+
+The hexadecimal HMAC-SHA1 digest of your shared secret and the concatenation of
+the above **time** and **nonce**. For example, in Ruby:
+`OpenSSL::HMAC.hexdigest('sha1', SECRET, "#{time}#{nonce}")`
 
 ## Example with RSolr
 
@@ -49,6 +55,6 @@ rsolr.add { id: 1, title: "Hello world" }, { headers: auth_headers }
 rsolr.commit headers: auth_headers
 
 # Search
-rsolr.get 'select', params: {}, headers: { auth_headers }
+rsolr.get 'select', params: { q: "hello" }, headers: { auth_headers }
 
 ```
